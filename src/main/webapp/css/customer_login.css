@@ -29,8 +29,6 @@ input:focus{
 	
 	outline: none;
 	border: none;
-	border-bottom:black;
-	border-bottom-style:solid;
 }
 td{
 	    font-weight: bold;
@@ -40,7 +38,7 @@ td{
 }
 h1{
 	font-size:50px;
-	color:white;
+	color:black;
 }
 strong{
 	color:orange;

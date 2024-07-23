@@ -1,7 +1,7 @@
 package com.dao;
 
 import java.sql.Connection;
-import java.sql.DriverManager;
+//import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.Statement;
@@ -20,24 +20,15 @@ public class AdminDao {
 	private Connection conn;
 	
 	public AdminDao() {
-		conn=this.getConnection(jdbc_url,jdbc_user,jdbc_pass);
+		conn=DatabaseConnect.getConnection(jdbc_url,jdbc_user,jdbc_pass);
 	}
 	
-	public Connection getConnection(String url,String username,String password) {
-		Connection conn=null;
-		try {
-			Class.forName("com.mysql.cj.jdbc.Driver");
-			conn=DriverManager.getConnection(url,username,password);
-		}catch(Exception e) {
-			e.printStackTrace();
-		}
-		return conn;
-	}
+	
 	
 	public boolean registerCustomer(Customer c) {
 		try {
 			System.out.println(c.getFullName());
-			String query="insert into customer values(?,?,?,?,?,?,?,?,?,?)";
+			String query="insert into customer values(?,?,?,?,?,?,?,?,?,?,?)";
 			PreparedStatement ps=conn.prepareStatement(query);
 			ps.setString(1, c.getAccNumber());
 			ps.setString(2, c.getPassword());
@@ -49,7 +40,10 @@ public class AdminDao {
 			ps.setDouble(8, c.getBalance());
 			ps.setString(9, c.getDob());
 			ps.setString(10, c.getIdProof());
+			ps.setInt(11, 0);
 			int k=ps.executeUpdate();
+			Statement cs=conn.createStatement();
+			cs.execute("insert into transactions values(null,null,null,null,null,null,null,null,null,null,"+c.getAccNumber()+")");
 			if(k==1) {
 				return true;
 			}else {
@@ -64,11 +58,13 @@ public class AdminDao {
 	
 	public boolean deleteCustomer(String acc_no, String name) {
 		try {
-			String query="DELETE  FROM customer WHERE acc_no=? AND full_name=?";
+			String query="DELETE FROM customer WHERE acc_no=? AND full_name=?";
 			PreparedStatement ps=conn.prepareStatement(query);
 			ps.setString(1, acc_no);
 			ps.setString(2, name);
 			int k=ps.executeUpdate();
+			Statement cs=conn.createStatement();
+			cs.execute("delete from transactions where acc_no="+acc_no);
 			if(k==1) {
 				return true;
 			}else {
@@ -82,8 +78,6 @@ public class AdminDao {
 	
 	public boolean login(String id,String pass) {
 		try {
-
-			Connection conn=getConnection(jdbc_url, jdbc_user, jdbc_pass);
 			System.out.println(conn);
 			PreparedStatement ps=conn.prepareStatement("select * from admin where admin_id=? AND password=?");
 			ps.setString(1,id);

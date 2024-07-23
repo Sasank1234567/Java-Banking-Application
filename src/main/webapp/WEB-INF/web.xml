@@ -129,4 +129,34 @@
     <servlet-name>DepositServlet</servlet-name>
     <url-pattern>/deposit_</url-pattern>
   </servlet-mapping>
+  <servlet>
+    <description></description>
+    <display-name>CheckPdfServlet</display-name>
+    <servlet-name>CheckPdfServlet</servlet-name>
+    <servlet-class>com.servlet.CheckPdfServlet</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>CheckPdfServlet</servlet-name>
+    <url-pattern>/checkpdf</url-pattern>
+  </servlet-mapping>
+  <servlet>
+    <description></description>
+    <display-name>ViewTransactionsServlet</display-name>
+    <servlet-name>ViewTransactionsServlet</servlet-name>
+    <servlet-class>com.servlet.ViewTransactionsServlet</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>ViewTransactionsServlet</servlet-name>
+    <url-pattern>/view_transactions</url-pattern>
+  </servlet-mapping>
+  <servlet>
+    <description></description>
+    <display-name>DownloadPdfServlet</display-name>
+    <servlet-name>DownloadPdfServlet</servlet-name>
+    <servlet-class>com.servlet.DownloadPdfServlet</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>DownloadPdfServlet</servlet-name>
+    <url-pattern>/download_pdf</url-pattern>
+  </servlet-mapping>
 </web-app>

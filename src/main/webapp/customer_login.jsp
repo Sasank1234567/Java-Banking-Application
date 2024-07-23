@@ -29,7 +29,7 @@
 </style>
 
 <meta charset="UTF-8">
-<link rel="stylesheet" type="text/css" href="css/customer_login.css">
+<link rel="stylesheet" type="text/css" href="css/customer_login.css?v=2">
 <title>Customer Login Page</title>
 </head>
 <body>

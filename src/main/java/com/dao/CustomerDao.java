@@ -2,7 +2,7 @@ package com.dao;
 
 import java.sql.Statement;
 import java.sql.Connection;
-import java.sql.DriverManager;
+//import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.ArrayList;
@@ -17,20 +17,9 @@ public class CustomerDao {
 		private Connection conn;
 		
 		public CustomerDao() {
-			conn=this.getConnection(jdbc_url,jdbc_user,jdbc_pass);
+			conn=DatabaseConnect.getConnection(jdbc_url,jdbc_user,jdbc_pass);
 		}
 		
-		public Connection getConnection(String url,String username,String password) {
-			Connection conn=null;
-			try {
-				Class.forName("com.mysql.cj.jdbc.Driver");
-				conn=DriverManager.getConnection(url,username,password);
-			}catch(Exception e) {
-				e.printStackTrace();
-			}
-			return conn;
-		}
-
 		public boolean updateCustomer(Customer c,String accNumber) {
 			try {
 				String query="update customer set  full_name=?, address=?, mobile_no=?,email=?, dob=? where acc_no=? And password=?";
@@ -119,7 +108,15 @@ public boolean changePassword(String acc, String o, String n) {
 		public boolean withDrawl(double amount,String ac_no) {
 			try {
 				System.out.println(amount+"------"+ac_no);
-				PreparedStatement ps=conn.prepareStatement("update customer set balance=balance-? where acc_no=?");
+				PreparedStatement ps=conn.prepareStatement("select balance from customer where acc_no="+ac_no);
+				ResultSet rs=ps.executeQuery();
+				if(rs.next()) {
+					double d=rs.getDouble("balance");
+					if(d<=0 || d-amount<=0) {
+						return false;
+					}
+				}
+				ps=conn.prepareStatement("update customer set balance=balance-? where acc_no=?");
 				ps.setDouble(1,amount );
 				ps.setString(2, ac_no);
 				int k=ps.executeUpdate();
@@ -173,7 +170,6 @@ public boolean changePassword(String acc, String o, String n) {
 		public boolean login(String acc_no,String pass) {
 			try {
 
-				Connection conn=getConnection(jdbc_url, jdbc_user, jdbc_pass);
 				System.out.println(conn);
 				PreparedStatement ps=conn.prepareStatement("select * from customer where acc_no=? AND password=?");
 				ps.setString(1,acc_no);
@@ -190,4 +186,56 @@ public boolean changePassword(String acc, String o, String n) {
 			}
 			return false;
 		}
+		
+		
+		public void AddTransaction(String acc_no , double d) {
+				double[] d_arr=new double[10];
+				int k=0;
+			try {
+				PreparedStatement ps=conn.prepareStatement("Select t0,t1,t2,t3,t4,t5,t6,t7,t8,t9 customer from transactions where acc_no=?");
+				ps.setString(1, acc_no);
+				ResultSet rs=ps.executeQuery();
+				if(rs.next()) {
+					for(int i=0;i<9;i++) {
+						d_arr[i+1]=rs.getDouble("t"+(i));
+					}
+					d_arr[0]=d;
+					ps=conn.prepareStatement("update transactions set t0=?,t1=?,t2=?,t3=?,t4=?,t5=?,t6=?,t7=?,t8=?,t9=? where acc_no=?");
+					for(int i=0;i<10;i++) {
+						ps.setDouble(i+1, d_arr[i]);
+					}
+					ps.setString(11, acc_no);
+					k=ps.executeUpdate();
+				}
+				if(k==1) {
+					System.out.println("transaction updated");
+				}
+			
+			}catch(Exception e) {
+				e.printStackTrace();;
+			}
+			
+		}
+		
+		public double[] getTransactions(String acc_no) {
+			double d[]=new double[10];
+			try {
+				System.out.println(acc_no);
+				PreparedStatement ps=conn.prepareStatement("Select t0,t1,t2,t3,t4,t5,t6,t7,t8,t9 from transactions where acc_no=?");
+				ps.setString(1, acc_no);
+				ResultSet rs=ps.executeQuery();
+				if(rs.next()) {
+					for(int i=0;i<10;i++) {
+						d[i]=rs.getDouble("t"+i);
+					}
+					return d;
+				}else {
+					return null;
+				}
+			}catch(Exception e){
+				e.printStackTrace();
+			}
+			return null;
+		}
+		
 }

@@ -30,6 +30,7 @@ public class WithDrawServlet extends HttpServlet {
 		String acc_no=request.getParameter("acc_no");
 		double amount=Double.parseDouble(request.getParameter("amount"));
 		if(c.withDrawl(amount, acc_no)) {
+			c.AddTransaction(acc_no, -1*amount);
 			response.sendRedirect("withdrawl_success.jsp");
 		}else {
 			response.setContentType("text/html");

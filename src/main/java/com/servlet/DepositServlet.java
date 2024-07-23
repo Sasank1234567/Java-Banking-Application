@@ -21,8 +21,9 @@ public class DepositServlet extends HttpServlet {
 		CustomerDao c=new CustomerDao();
 		String acc_no=request.getParameter("acc_no");
 		System.out.println(request.getParameter("amount"));
-		Double amount=Double.parseDouble(request.getParameter("amount"));
+		double amount=Double.parseDouble(request.getParameter("amount"));
 		if(c.deposit(amount, acc_no)) {
+			c.AddTransaction(acc_no, amount);
 			response.sendRedirect("withdrawl_success.jsp");
 		}else {
 			response.setContentType("text/html");
