@@ -11,9 +11,9 @@ import java.util.List;
 import com.entity.Customer;
 
 public class CustomerDao {
-		private String jdbc_url="jdbc:mysql://localhost:3306/bank";
+		private String jdbc_url="jdbc:mysql://localhost:3306/****";
 		private String jdbc_user="root";
-		private String jdbc_pass="sasank123.";
+		private String jdbc_pass="*********";
 		private Connection conn;
 		
 		public CustomerDao() {
